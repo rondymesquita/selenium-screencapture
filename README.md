@@ -1,5 +1,5 @@
 # Selenium Basic
-Selenium Basic Example
+Selenium Screenshots Library
 
 ##Requirements
 - Maven3+

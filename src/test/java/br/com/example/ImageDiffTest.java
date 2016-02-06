@@ -98,6 +98,7 @@ public class ImageDiffTest {
 		assertTrue(imageDiff.equals());
 		
 		assertTrue(actual.delete());
+		
 	}
 	
 	@Test

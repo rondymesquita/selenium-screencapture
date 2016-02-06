@@ -1,7 +1,5 @@
 package br.com.example.screenshot;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,7 +13,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.Augmenter;
 
 import br.com.example.image.ImageDiff;
-import br.com.example.image.ImageDiffConfig;
 import br.com.example.screenshot.ScreenshooterCapabilites.ScreenshooterCapabilitesValidator;
 import br.com.example.util.Logger;
 
@@ -27,7 +24,7 @@ public class Screenshooter{
 	private WebDriver driver;
 	private boolean areScreenshotsOk = true;
 	private ImageDiff imageDiff;
-	private List<String> errorList = new ArrayList<String>();
+	private List<String> errors = new ArrayList<String>();
 	private ScreenshooterCapabilites capabilites;
 	
 	public Screenshooter(WebDriver driver, TestName testNameRule, ScreenshooterCapabilites capabilites) throws Exception {
@@ -55,9 +52,9 @@ public class Screenshooter{
 	/**
 	 * Takes screenshot from current opened web page and compare with
 	 * expected saved image on input folder
-	 * @throws IOException 
+	 * @throws Exception 
 	 */
-	public void takeScreenshot() throws IOException {
+	public void takeScreenshot() throws Exception {
 
 		String screenshotName = takeScreenshotFromPage();
 		
@@ -95,9 +92,9 @@ public class Screenshooter{
 	 * 
 	 * @param screenshotName
 	 * @return
-	 * @throws IOException
+	 * @throws Exception 
 	 */
-	private boolean areImagesEqual(String screenshotName) throws IOException {
+	private boolean areImagesEqual(String screenshotName) throws Exception {
 
 		File actual = new File(capabilites.getOutputFolder(), screenshotName + ".png");
 		File expected = new File(capabilites.getInputFolder(), screenshotName + ".png");
@@ -105,7 +102,8 @@ public class Screenshooter{
 		if (!expected.exists()) {
 			String msg = String.format("The expected file %s%s was not found", capabilites.getInputFolder(), screenshotName);
 			Logger.logSevere(msg);
-			errorList.add(msg);
+			errors.add(msg);
+//			throw new Exception(msg);
 			return false;
 		}
 
@@ -117,7 +115,7 @@ public class Screenshooter{
 			FileUtils.copyFile(expected, new File(capabilites.getOutputFolder(), screenshotName + "-expected.png"));
 			String msg = String.format("The image %s%s does not match with expected", capabilites.getOutputFolder(), screenshotName);
 			Logger.logSevere(msg);
-			errorList.add(msg);
+			errors.add(msg);
 		}
 
 		return areImagesEqual;
@@ -125,20 +123,24 @@ public class Screenshooter{
 	}
 	
 	public boolean isOk() {
-		//assertTrue(getErrorsFromErrorList(), areScreenshotsOk);
 		if(!areScreenshotsOk){
-			Logger.logSevere(getErrors());
+			Logger.logSevere(getErrorsString());
 		}
 		
 		return areScreenshotsOk;
 	}
 	
-	public String getErrors() {
-		StringBuilder stringBuilder = new StringBuilder();
-		for (String string : errorList) {
-			stringBuilder.append(string);
+	public String getErrorsString() {
+		StringBuilder e = new StringBuilder();
+		for (String error : errors) {
+			e.append(error + "\n");
 		}
-		return stringBuilder.toString();
+		return e.toString();
+	}
+	
+	public List<String> getErrors() {
+		System.out.println(getErrorsString());
+		return errors;
 	}
 
 	public ScreenshooterCapabilites getCapabilites() {

@@ -2,8 +2,6 @@ package br.com.example.screenshot;
 
 import java.awt.Color;
 
-import com.sun.corba.se.spi.orbutil.fsm.Input;
-
 import br.com.example.image.ImageDiffConfig;
 import br.com.example.util.Logger;
 
@@ -62,7 +60,7 @@ public class ScreenshooterCapabilites {
 		private static boolean isValid(ScreenshooterCapabilites capabilites) {
 			boolean isValid = true;
 			if(capabilites.getInputFolder().equals(capabilites.getOutputFolder())){
-				errors.append("ScreenshooterCapabilites: Input folder must be different of output folder.\n");
+				errors.append("ScreenshooterCapabilites: Input folder must be different of output folder.");
 				isValid = false;
 			}
 			return isValid;
@@ -73,9 +71,10 @@ public class ScreenshooterCapabilites {
 				Logger.logSevere(errors.toString());
 				throw new Exception(errors.toString());
 			}
-				
 		}
 		
+		public static String getErrors() {
+			return errors.toString();
+		}
 	}
-
 }

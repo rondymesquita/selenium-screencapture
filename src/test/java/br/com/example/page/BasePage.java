@@ -11,6 +11,7 @@ public abstract class BasePage {
     protected String url;
 
     public BasePage(WebDriver driver, String url){
+    	System.out.println(url);
         this.driver = driver;
         this.url = url;
     }

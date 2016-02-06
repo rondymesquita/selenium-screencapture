@@ -1,0 +1,27 @@
+*[container] {
+  padding: 10px;
+  max-width: 40%;
+  margin: auto;
+}
+form{
+    margin: 0 auto;
+    /*padding: 25% 0;*/
+    /*border:1px solid red;*/
+    /*height: 90vh;*/
+}
+#search_field{
+    width: 70%;
+    border-radius: 0px;
+    float: left;
+}
+#search_button{
+    width: 30%;
+    margin: 0;
+    border-radius: 0px;
+}
+.hide{
+    display: none;
+}
+.center{
+    text-align: center;
+}

@@ -1,13 +1,16 @@
 package br.com.example;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TestName;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -28,6 +31,10 @@ public class ScreenshooterTest {
 	private String inputFolder;
 	private String outputFolder;
 	private String testName;
+	private String fileName;
+	
+	@Rule
+	public ExpectedException expectedException = ExpectedException.none();
 
 	@Before
 	public void before() throws Exception {
@@ -35,6 +42,8 @@ public class ScreenshooterTest {
 		
 		inputFolder = "./test-assets/screenshot/input/";
 		outputFolder = "./test-assets/screenshot/output/";
+		
+		fileName = testName + "/" + testName;
 		
 		driver = new FirefoxDriver();
 		driver.manage().window().maximize();
@@ -60,85 +69,119 @@ public class ScreenshooterTest {
 		screenshooter.takeScreenshot();
 		assertTrue(!screenshooter.isOk());
 		String msg = String.format("The expected file %s%s was not found", screenshotCapabilites.getInputFolder(), testName + "/" + testName + "-1");
-		assertEquals(msg, screenshooter.getErrors());
+		List<String> errors = screenshooter.getErrors();
+		assertTrue(errors.contains(msg));
+	}
+	
+	@Test
+	public void shouldTakeTwoScreenshotAndInputFileShouldNotExists() throws Exception {
+		duckDuckGoPage.open();
+		screenshooter.takeScreenshot();
+		
+		duckDuckGoPage.setAnyTextOnSearchField();
+		screenshooter.takeScreenshot();
+		
+		assertTrue(!screenshooter.isOk());
+		String msg = String.format("The expected file %s%s was not found", screenshotCapabilites.getInputFolder(), testName + "/" + testName + "-1");
+		String msg2 = String.format("The expected file %s%s was not found", screenshotCapabilites.getInputFolder(), testName + "/" + testName + "-2");
+		List<String> errors = screenshooter.getErrors();
+		assertTrue(errors.contains(msg));
+		assertTrue(errors.contains(msg2));
+	}
+	
+	@Test
+	public void shouldTakeOneScreenshotImageDoNotMatchAndVerifyMessages() throws Exception {
+		duckDuckGoPage.open();
+		screenshooter.takeScreenshot();
+		assertTrue(!screenshooter.isOk());
+		String msg = String.format("The image %s%s does not match with expected", screenshotCapabilites.getOutputFolder(), testName + "/" + testName + "-1");
+		List<String> errors = screenshooter.getErrors();
+		assertTrue(errors.contains(msg));
+	}
+	
+	@Test
+	public void shouldTakeTwoScreenshotImageDoNotMatchAndVerifyMessages() throws Exception {
+		duckDuckGoPage.open();
+		screenshooter.takeScreenshot();
+		
+		duckDuckGoPage.setAnyTextOnSearchField();
+		screenshooter.takeScreenshot();
+		
+		assertTrue(!screenshooter.isOk());
+		String msg1 = String.format("The image %s%s does not match with expected", screenshotCapabilites.getOutputFolder(), testName + "/" + testName + "-1");
+		String msg2 = String.format("The image %s%s does not match with expected", screenshotCapabilites.getOutputFolder(), testName + "/" + testName + "-2");
+		List<String> errors = screenshooter.getErrors();
+		assertTrue(errors.contains(msg1));
+		assertTrue(errors.contains(msg2));
+	}
+	
+	@Test
+	public void shouldTakeOneScreenshotAndInputFileShouldExists() throws Exception {
+		duckDuckGoPage.open();
+		screenshooter.takeScreenshot();
+		assertTrue(screenshooter.isOk());
+		
+		File inputFile = new File(inputFolder, fileName + "-1.png");
+		assertTrue(inputFile.exists());
+		File outputFile = new File(outputFolder, fileName + "-1.png");
+		assertTrue(outputFile.exists());
+		File expectedFile = new File(outputFolder, fileName + "-1-expected.png");
+		assertTrue(!expectedFile.exists());
+		File diffFile = new File(outputFolder, fileName + "-1-diff.png");
+		assertTrue(!diffFile.exists());
+	}
+	
+	@Test
+	public void shouldTakeTwoScreenshotAndInputFileShouldExists() throws Exception {
+		duckDuckGoPage.open();
+		screenshooter.takeScreenshot();
+		
+		duckDuckGoPage.setAnyTextOnSearchField();
+		screenshooter.takeScreenshot();
+		
+		assertTrue(screenshooter.isOk());
+		
+		File inputFile = new File(inputFolder, fileName + "-1.png");
+		assertTrue(inputFile.exists());
+		File outputFile = new File(outputFolder, fileName + "-1.png");
+		assertTrue(outputFile.exists());
+		File expectedFile = new File(outputFolder, fileName + "-1-expected.png");
+		assertTrue(!expectedFile.exists());
+		File diffFile = new File(outputFolder, fileName + "-1-diff.png");
+		assertTrue(!diffFile.exists());
+		
+		inputFile = new File(inputFolder, fileName + "-2.png");
+		assertTrue(inputFile.exists());
+		outputFile = new File(outputFolder, fileName + "-2.png");
+		assertTrue(outputFile.exists());
+		expectedFile = new File(outputFolder, fileName + "-2-expected.png");
+		assertTrue(!expectedFile.exists());
+		diffFile = new File(outputFolder, fileName + "-2-diff.png");
+		assertTrue(!diffFile.exists());
+		
 	}
 	
 	@Test
 	public void shouldTakeOneScreenshotAndGenerateDiff() throws Exception {
 		duckDuckGoPage.open();
 		screenshooter.takeScreenshot();
-		assertTrue(!screenshooter.isOk());
-		String msg = String.format("The image %s%s does not match with expected", screenshotCapabilites.getOutputFolder(), testName + "/" + testName + "-1");
-		assertEquals(msg, screenshooter.getErrors());
-	}
-	
-	@Test
-	public void shouldTakeOneScreenshotAndRunWithSucess() throws Exception {
-		duckDuckGoPage.open();
-		screenshooter.takeScreenshot();
-		assertTrue(screenshooter.isOk());
-		
-		File inputFile = new File(inputFolder, testName + "/"+ testName + "-1.png");
-		assertTrue(inputFile.exists());
-		File outputFile = new File(outputFolder, testName + "/"+ testName + "-1.png");
-		assertTrue(outputFile.exists());
-		File expectedFile = new File(outputFolder, testName + "/"+ testName + "-1-expected.png");
-		assertTrue(!expectedFile.exists());
-		File diffFile = new File(outputFolder, testName + "/"+ testName + "-1-diff.png");
-		assertTrue(!diffFile.exists());
-	}
-	
-	@Test
-	public void shouldTakeTwoScreenshotAndRunWithSucess() throws Exception {
-		duckDuckGoPage.open();
-		screenshooter.takeScreenshot();
-		
-		duckDuckGoPage.setAnyTextOnSearchField();
-		screenshooter.takeScreenshot();
-		
-		assertTrue(screenshooter.isOk());
-		
-		File inputFile = new File(inputFolder, testName + "/"+ testName + "-1.png");
-		assertTrue(inputFile.exists());
-		File outputFile = new File(outputFolder, testName + "/"+ testName + "-1.png");
-		assertTrue(outputFile.exists());
-		File expectedFile = new File(outputFolder, testName + "/"+ testName + "-1-expected.png");
-		assertTrue(!expectedFile.exists());
-		File diffFile = new File(outputFolder, testName + "/"+ testName + "-1-diff.png");
-		assertTrue(!diffFile.exists());
-		
-		inputFile = new File(inputFolder, testName + "/"+ testName + "-2.png");
-		assertTrue(inputFile.exists());
-		outputFile = new File(outputFolder, testName + "/"+ testName + "-2.png");
-		assertTrue(outputFile.exists());
-		expectedFile = new File(outputFolder, testName + "/"+ testName + "-2-expected.png");
-		assertTrue(!expectedFile.exists());
-		diffFile = new File(outputFolder, testName + "/"+ testName + "-2-diff.png");
-		assertTrue(!diffFile.exists());
-		
-	}
-	
-	@Test
-	public void shouldTakeOneScreenshotAndGenerateDiffWithSuccess() throws Exception {
-		duckDuckGoPage.open();
-		screenshooter.takeScreenshot();
 		
 		assertTrue(!screenshooter.isOk());
 		
-		File inputFile = new File(inputFolder, testName + "/"+ testName + "-1.png");
+		File inputFile = new File(inputFolder, fileName + "-1.png");
 		assertTrue(inputFile.exists());
-		File outputFile = new File(outputFolder, testName + "/"+ testName + "-1.png");
+		File outputFile = new File(outputFolder, fileName + "-1.png");
 		assertTrue(outputFile.exists());
-		File expectedFile = new File(outputFolder, testName + "/"+ testName + "-1-expected.png");
+		File expectedFile = new File(outputFolder, fileName + "-1-expected.png");
 		assertTrue(expectedFile.exists());
 		assertTrue(expectedFile.delete());
-		File diffFile = new File(outputFolder, testName + "/"+ testName + "-1-diff.png");
+		File diffFile = new File(outputFolder, fileName + "-1-diff.png");
 		assertTrue(diffFile.exists());
 		assertTrue(diffFile.delete());
 	}
 	
 	@Test
-	public void shouldTakeTwoScreenshotsAndGenerateDiffWithSuccess() throws Exception {
+	public void shouldTakeTwoScreenshotsAndGenerateDiff() throws Exception {
 		duckDuckGoPage.open();
 		screenshooter.takeScreenshot();
 		
@@ -147,43 +190,41 @@ public class ScreenshooterTest {
 		
 		assertTrue(!screenshooter.isOk());
 		
-		File inputFile = new File(inputFolder, testName + "/"+ testName + "-1.png");
+		File inputFile = new File(inputFolder, fileName + "-1.png");
 		assertTrue(inputFile.exists());
-		File outputFile = new File(outputFolder, testName + "/"+ testName + "-1.png");
+		File outputFile = new File(outputFolder, fileName + "-1.png");
 		assertTrue(outputFile.exists());
-		File expectedFile = new File(outputFolder, testName + "/"+ testName + "-1-expected.png");
+		File expectedFile = new File(outputFolder, fileName + "-1-expected.png");
 		assertTrue(expectedFile.exists());
 		assertTrue(expectedFile.delete());
-		File diffFile = new File(outputFolder, testName + "/"+ testName + "-1-diff.png");
+		File diffFile = new File(outputFolder, fileName + "-1-diff.png");
 		assertTrue(diffFile.exists());
 		assertTrue(diffFile.delete());
 		
-		inputFile = new File(inputFolder, testName + "/"+ testName + "-2.png");
+		inputFile = new File(inputFolder, fileName + "-2.png");
 		assertTrue(inputFile.exists());
-		outputFile = new File(outputFolder, testName + "/"+ testName + "-2.png");
+		outputFile = new File(outputFolder, fileName + "-2.png");
 		assertTrue(outputFile.exists());
-		expectedFile = new File(outputFolder, testName + "/"+ testName + "-2-expected.png");
+		expectedFile = new File(outputFolder, fileName + "-2-expected.png");
 		assertTrue(expectedFile.exists());
 		assertTrue(expectedFile.delete());
-		diffFile = new File(outputFolder, testName + "/"+ testName + "-2-diff.png");
+		diffFile = new File(outputFolder, fileName + "-2-diff.png");
 		assertTrue(diffFile.exists());
 		assertTrue(diffFile.delete());
 	}
 
 	@Test
-	public void shouldDefaultCapabilitiesBuiltWithSuccess() throws Exception{
+	public void shouldBuildDefaultCapabilitiesWithSuccess() throws Exception{
 		screenshooter = new Screenshooter(driver, testNameRule);
 		ScreenshooterCapabilites capabilities = screenshooter.getCapabilites();
 		assertEquals("./screenshot/input/", capabilities.getInputFolder());
 		assertEquals("./screenshot/output/", capabilities.getOutputFolder());
 		assertEquals(HighlightColor.MAGENTA, capabilities.getHighlightColor());
 		assertEquals(true, capabilities.isShouldGenerateDiffImage());
-		
-		
 	}
 	
 	@Test
-	public void shouldCustomCapabilitiesBuiltWithSuccess() throws Exception{
+	public void shouldBuildCustomCapabilitiesWithSuccess() throws Exception{
 		
 		inputFolder = "./test-assets/screenshot/another-input/";
 		outputFolder = "./test-assets/screenshot/another-output/";
@@ -204,17 +245,17 @@ public class ScreenshooterTest {
 		duckDuckGoPage.open();
 		screenshooter.takeScreenshot();
 		
-		File outputFile = new File(outputFolder, testName + "/"+ testName + "-1.png");
+		File outputFile = new File(outputFolder, fileName + "-1.png");
 		assertTrue(outputFile.exists());
 		
-		File inputFile = new File(outputFolder, testName + "/"+ testName + "-1.png");
+		File inputFile = new File(outputFolder, fileName + "-1.png");
 		assertTrue(inputFile.exists());
 		
 		assertTrue(screenshooter.isOk());
 	}
 	
 	@Test
-	public void shouldCustomCapabilitiesBuiltWithSuccessAndGenerateDiff() throws Exception{
+	public void shouldBuildCustomCapabilitiesWithSuccessAndGenerateDiff() throws Exception{
 		
 		inputFolder = "./test-assets/screenshot/another-input/";
 		outputFolder = "./test-assets/screenshot/another-output/";
@@ -235,16 +276,42 @@ public class ScreenshooterTest {
 		duckDuckGoPage.open();
 		screenshooter.takeScreenshot();
 		
-		File inputFile = new File(inputFolder, testName + "/"+ testName + "-1.png");
+		File inputFile = new File(inputFolder, fileName + "-1.png");
 		assertTrue(inputFile.exists());
 		
-		File outputFile = new File(outputFolder, testName + "/"+ testName + "-1.png");
+		File outputFile = new File(outputFolder, fileName + "-1.png");
 		assertTrue(outputFile.exists());
 		
-		File diffFile = new File(outputFolder, testName + "/"+ testName + "-1-diff.png");
+		File expectedFile = new File(outputFolder, fileName + "-1-expected.png");
+		assertTrue(expectedFile.exists());
+		
+		File diffFile = new File(outputFolder, fileName + "-1-diff.png");
 		assertTrue(diffFile.exists());
 		
 		assertTrue(!screenshooter.isOk());
+	}
+	
+	@Test
+	public void shouldThrowExceptionWhenInputAndOutputAreEqual() throws Exception{
+		expectedException.expect(Exception.class);
+		expectedException.expectMessage("ScreenshooterCapabilites: Input folder must be different of output folder.");
+		
+		inputFolder = "./folder";
+		outputFolder = "./folder";
+		
+		screenshotCapabilites = new ScreenshooterCapabilites();
+		screenshotCapabilites.setInputFolder(inputFolder);
+		screenshotCapabilites.setOutputFolder(outputFolder);
+		
+		screenshooter = new Screenshooter(driver, testNameRule, screenshotCapabilites);
+	}
+	
+	@Test
+	public void shouldGenerateDiffWithMagentaColorWithoutConfig() throws Exception{
+		duckDuckGoPage.open();
+		screenshooter.takeScreenshot();
+		//assertTrue(screenshooter.isOk());
+		
 	}
 	
 }
