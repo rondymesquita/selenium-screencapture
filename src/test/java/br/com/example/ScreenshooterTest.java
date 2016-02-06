@@ -16,6 +16,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import br.com.example.image.HighlightColor;
+import br.com.example.image.ImageDiff;
 import br.com.example.page.DuckDuckGoPage;
 import br.com.example.screenshot.Screenshooter;
 import br.com.example.screenshot.ScreenshooterCapabilites;
@@ -32,6 +33,7 @@ public class ScreenshooterTest {
 	private String outputFolder;
 	private String testName;
 	private String fileName;
+	private ImageDiff imageDiff;
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
@@ -310,8 +312,149 @@ public class ScreenshooterTest {
 	public void shouldGenerateDiffWithMagentaColorWithoutConfig() throws Exception{
 		duckDuckGoPage.open();
 		screenshooter.takeScreenshot();
-		//assertTrue(screenshooter.isOk());
+		assertTrue(!screenshooter.isOk());
 		
+		File diffFile = new File(outputFolder, fileName + "-1-diff.png");
+		assertTrue(diffFile.exists());
+		
+		File expectedFile = new File(outputFolder, fileName + "-1-diff-expected.png");
+		assertTrue(diffFile.exists());
+		
+		imageDiff = new ImageDiff();
+		imageDiff.setImages(diffFile, expectedFile);
+		assertTrue(imageDiff.equals());
+	}
+	
+	@Test
+	public void shouldGenerateDiffWithMagentaColor() throws Exception{
+		screenshotCapabilites = new ScreenshooterCapabilites();
+		screenshotCapabilites.setHighlightColor(HighlightColor.MAGENTA);
+		screenshotCapabilites.setInputFolder(inputFolder);
+		screenshotCapabilites.setOutputFolder(outputFolder);
+		screenshooter = new Screenshooter(driver, testNameRule, screenshotCapabilites);
+		duckDuckGoPage.open();
+		screenshooter.takeScreenshot();
+		assertTrue(!screenshooter.isOk());
+		
+		File diffFile = new File(outputFolder, fileName + "-1-diff.png");
+		assertTrue(diffFile.exists());
+		
+		File expectedFile = new File(outputFolder, fileName + "-1-diff-expected.png");
+		assertTrue(diffFile.exists());
+		
+		imageDiff = new ImageDiff();
+		imageDiff.setImages(diffFile, expectedFile);
+		assertTrue(imageDiff.equals());
+	}
+	
+	@Test
+	public void shouldGenerateDiffWithCyanColor() throws Exception{
+		screenshotCapabilites = new ScreenshooterCapabilites();
+		screenshotCapabilites.setHighlightColor(HighlightColor.CYAN);
+		screenshotCapabilites.setInputFolder(inputFolder);
+		screenshotCapabilites.setOutputFolder(outputFolder);
+		screenshooter = new Screenshooter(driver, testNameRule, screenshotCapabilites);
+		duckDuckGoPage.open();
+		screenshooter.takeScreenshot();
+		assertTrue(!screenshooter.isOk());
+		
+		File diffFile = new File(outputFolder, fileName + "-1-diff.png");
+		assertTrue(diffFile.exists());
+		
+		File expectedFile = new File(outputFolder, fileName + "-1-diff-expected.png");
+		assertTrue(diffFile.exists());
+		
+		imageDiff = new ImageDiff();
+		imageDiff.setImages(diffFile, expectedFile);
+		assertTrue(imageDiff.equals());
+	}
+	
+	@Test
+	public void shouldGenerateDiffWithYellowColor() throws Exception{
+		screenshotCapabilites = new ScreenshooterCapabilites();
+		screenshotCapabilites.setHighlightColor(HighlightColor.YELLOW);
+		screenshotCapabilites.setInputFolder(inputFolder);
+		screenshotCapabilites.setOutputFolder(outputFolder);
+		screenshooter = new Screenshooter(driver, testNameRule, screenshotCapabilites);
+		duckDuckGoPage.open();
+		screenshooter.takeScreenshot();
+		assertTrue(!screenshooter.isOk());
+		
+		File diffFile = new File(outputFolder, fileName + "-1-diff.png");
+		assertTrue(diffFile.exists());
+		
+		File expectedFile = new File(outputFolder, fileName + "-1-diff-expected.png");
+		assertTrue(diffFile.exists());
+		
+		imageDiff = new ImageDiff();
+		imageDiff.setImages(diffFile, expectedFile);
+		assertTrue(imageDiff.equals());
+	}
+	
+	@Test
+	public void shouldGenerateDiffWithBlueColor() throws Exception{
+		screenshotCapabilites = new ScreenshooterCapabilites();
+		screenshotCapabilites.setHighlightColor(HighlightColor.BLUE);
+		screenshotCapabilites.setInputFolder(inputFolder);
+		screenshotCapabilites.setOutputFolder(outputFolder);
+		screenshooter = new Screenshooter(driver, testNameRule, screenshotCapabilites);
+		duckDuckGoPage.open();
+		screenshooter.takeScreenshot();
+		assertTrue(!screenshooter.isOk());
+		
+		File diffFile = new File(outputFolder, fileName + "-1-diff.png");
+		assertTrue(diffFile.exists());
+		
+		File expectedFile = new File(outputFolder, fileName + "-1-diff-expected.png");
+		assertTrue(diffFile.exists());
+		
+		imageDiff = new ImageDiff();
+		imageDiff.setImages(diffFile, expectedFile);
+		assertTrue(imageDiff.equals());
+	}
+	
+	@Test
+	public void shouldGenerateDiffWithGreenColor() throws Exception{
+		screenshotCapabilites = new ScreenshooterCapabilites();
+		screenshotCapabilites.setHighlightColor(HighlightColor.GREEN);
+		screenshotCapabilites.setInputFolder(inputFolder);
+		screenshotCapabilites.setOutputFolder(outputFolder);
+		screenshooter = new Screenshooter(driver, testNameRule, screenshotCapabilites);
+		duckDuckGoPage.open();
+		screenshooter.takeScreenshot();
+		assertTrue(!screenshooter.isOk());
+		
+		File diffFile = new File(outputFolder, fileName + "-1-diff.png");
+		assertTrue(diffFile.exists());
+		
+		File expectedFile = new File(outputFolder, fileName + "-1-diff-expected.png");
+		assertTrue(diffFile.exists());
+		
+		imageDiff = new ImageDiff();
+		imageDiff.setImages(diffFile, expectedFile);
+		assertTrue(imageDiff.equals());
+	}
+	
+	@Test
+	public void shouldGenerateDiffWithRedColor() throws Exception{
+		screenshotCapabilites = new ScreenshooterCapabilites();
+		screenshotCapabilites.setHighlightColor(HighlightColor.RED);
+		screenshotCapabilites.setInputFolder(inputFolder);
+		screenshotCapabilites.setOutputFolder(outputFolder);
+		screenshooter = new Screenshooter(driver, testNameRule, screenshotCapabilites);
+		duckDuckGoPage.open();
+		screenshooter.takeScreenshot();
+		assertTrue(!screenshooter.isOk());
+		
+		File diffFile = new File(outputFolder, fileName + "-1-diff.png");
+		assertTrue(diffFile.exists());
+		
+		File expectedFile = new File(outputFolder, fileName + "-1-diff-expected.png");
+		assertTrue(diffFile.exists());
+		
+		imageDiff = new ImageDiff();
+		imageDiff.setImages(diffFile, expectedFile);
+		assertTrue(imageDiff.equals());
 	}
 	
 }

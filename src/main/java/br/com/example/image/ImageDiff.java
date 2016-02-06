@@ -35,10 +35,22 @@ public class ImageDiff {
 		this.config = config;
 	}
 
-	public void setImages(File actualFile, File expectedFile) {
+	public void setImages(File actualFile, File expectedFile) throws Exception {
 		try {
 			this.actualFile = actualFile;
-
+			
+			String msgFormat = "The file %s was not found";
+			
+			if(!actualFile.exists()){
+				String msg = String.format(msgFormat, actualFile.getPath());
+				throw new Exception(msg);
+			}
+			
+			if(!expectedFile.exists()){
+				String msg = String.format(msgFormat, expectedFile.getPath());
+				throw new Exception(msg);
+			}
+				
 			actual = ImageIO.read(actualFile);
 			expected = ImageIO.read(expectedFile);
 
@@ -90,7 +102,7 @@ public class ImageDiff {
 
 		BufferedImage diffLayer = new BufferedImage(maxWidth, maxHeight, BufferedImage.TYPE_INT_ARGB);
 
-		compare: for (int x = 0; x < maxWidth; x++) {
+		for (int x = 0; x < maxWidth; x++) {
 			for (int y = 0; y < maxHeight; y++) {
 
 				try {
@@ -101,7 +113,6 @@ public class ImageDiff {
 				} catch (ArrayIndexOutOfBoundsException e) {
 					areImagesEqual = false;
 					diffLayer.setRGB(x, y, config.highlightColor.getRGB());
-//					break compare;
 				}
 			}
 		}

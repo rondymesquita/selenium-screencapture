@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TestName;
 
 import br.com.example.image.HighlightColor;
@@ -23,6 +24,9 @@ public class ImageDiffTest {
 	private String folderName;
 	
 	private ImageDiff imageDiff;
+	
+	@Rule
+	public ExpectedException expectedException = ExpectedException.none();
 	
 	@Before
 	public void before() {
@@ -73,6 +77,34 @@ public class ImageDiffTest {
 		
 		File diff = new File(folderName,"1-diff.png");
 		assertTrue(!diff.exists());
+	}
+	
+	@Test
+	public void shouldThrowExceptionWhenFilesDontExist() throws Exception{
+		
+		File inexistentFile	= new File(folderName, "x.png");
+		File existentFile 	= new File(folderName, "1.png");
+		
+		String msgFormat = "The file %s was not found";
+		expectedException.expect(Exception.class);
+		expectedException.expectMessage(String.format(msgFormat, inexistentFile));
+		
+		imageDiff.setImages(inexistentFile, existentFile);
+		
+	}
+	
+	@Test
+	public void shouldThrowExceptionWhenFilesDontExistSecondArgument() throws Exception{
+		
+		File inexistentFile	= new File(folderName, "x.png");
+		File existentFile 	= new File(folderName, "1.png");
+		
+		String msgFormat = "The file %s was not found";
+		expectedException.expect(Exception.class);
+		expectedException.expectMessage(String.format(msgFormat, inexistentFile));
+		
+		imageDiff.setImages(existentFile, inexistentFile);
+		
 	}
 	
 	@Test
