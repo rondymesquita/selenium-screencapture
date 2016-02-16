@@ -10,17 +10,13 @@ import com.sun.org.apache.bcel.internal.generic.F2D;
 
 import br.com.example.util.Logger;
 
-/**
- * Created by rondymesquita on 26/09/15.
- */
-public class DuckDuckGoPage extends BasePage{
+public class SimpleSearchPage extends BasePage{
 
-//    private static final String URL = "https://duckduckgo.com";
 	private static final String URL = "file://" + new File("./test-assets/public/index.html").getAbsolutePath();
     public final By searchFieldSelectorBy = By.id("search_field");
     public final By searchButtonSelectorBy = By.id("search_button");
 
-    public DuckDuckGoPage(WebDriver driver) {
+    public SimpleSearchPage(WebDriver driver) {
         super(driver, URL);
     }
 
@@ -47,13 +43,4 @@ public class DuckDuckGoPage extends BasePage{
         setSearchField(search);
         clickOnSearchButton();
     }
-
-
-
-
-
-
-
-
-
 }

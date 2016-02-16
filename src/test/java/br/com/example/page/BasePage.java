@@ -2,16 +2,15 @@ package br.com.example.page;
 
 import org.openqa.selenium.WebDriver;
 
-/**
- * Created by rondymesquita on 26/09/15.
- */
+import br.com.example.util.Logger;
+
 public abstract class BasePage {
 
     protected WebDriver driver;
     protected String url;
 
     public BasePage(WebDriver driver, String url){
-    	System.out.println(url);
+    	Logger.logInfo(url);
         this.driver = driver;
         this.url = url;
     }

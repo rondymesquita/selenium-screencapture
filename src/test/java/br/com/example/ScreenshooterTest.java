@@ -17,7 +17,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 import br.com.example.image.HighlightColor;
 import br.com.example.image.ImageDiff;
-import br.com.example.page.DuckDuckGoPage;
+import br.com.example.page.SimpleSearchPage;
 import br.com.example.screenshot.Screenshooter;
 import br.com.example.screenshot.ScreenshooterCapabilites;
 
@@ -28,7 +28,7 @@ public class ScreenshooterTest {
 	private WebDriver driver;
 	private Screenshooter screenshooter;
 	private ScreenshooterCapabilites screenshotCapabilites;
-	private DuckDuckGoPage duckDuckGoPage;
+	private SimpleSearchPage simpleSearchPage;
 	private String inputFolder;
 	private String outputFolder;
 	private String testName;
@@ -49,14 +49,14 @@ public class ScreenshooterTest {
 		
 		driver = new FirefoxDriver();
 		driver.manage().window().maximize();
-		duckDuckGoPage = new DuckDuckGoPage(driver);
+		simpleSearchPage = new SimpleSearchPage(driver);
 
 		screenshotCapabilites = new ScreenshooterCapabilites();
 		screenshotCapabilites.setHighlightColor(HighlightColor.MAGENTA);
 		screenshotCapabilites.setInputFolder(inputFolder);
 		screenshotCapabilites.setOutputFolder(outputFolder);
 
-		screenshooter = new Screenshooter(driver, testNameRule, screenshotCapabilites);
+		screenshooter = new Screenshooter(driver, testNameRule);
 
 	}
 
@@ -67,7 +67,7 @@ public class ScreenshooterTest {
 
 	@Test
 	public void shouldTakeOneScreenshotAndInputFileShouldNotExists() throws Exception {
-		duckDuckGoPage.open();
+		simpleSearchPage.open();
 		screenshooter.takeScreenshot();
 		assertTrue(!screenshooter.isOk());
 		String msg = String.format("The expected file %s%s was not found", screenshotCapabilites.getInputFolder(), testName + "/" + testName + "-1");
@@ -77,10 +77,10 @@ public class ScreenshooterTest {
 	
 	@Test
 	public void shouldTakeTwoScreenshotAndInputFileShouldNotExists() throws Exception {
-		duckDuckGoPage.open();
+		simpleSearchPage.open();
 		screenshooter.takeScreenshot();
 		
-		duckDuckGoPage.setAnyTextOnSearchField();
+		simpleSearchPage.setAnyTextOnSearchField();
 		screenshooter.takeScreenshot();
 		
 		assertTrue(!screenshooter.isOk());
@@ -93,7 +93,7 @@ public class ScreenshooterTest {
 	
 	@Test
 	public void shouldTakeOneScreenshotImageDoNotMatchAndVerifyMessages() throws Exception {
-		duckDuckGoPage.open();
+		simpleSearchPage.open();
 		screenshooter.takeScreenshot();
 		assertTrue(!screenshooter.isOk());
 		String msg = String.format("The image %s%s does not match with expected", screenshotCapabilites.getOutputFolder(), testName + "/" + testName + "-1");
@@ -103,10 +103,10 @@ public class ScreenshooterTest {
 	
 	@Test
 	public void shouldTakeTwoScreenshotImageDoNotMatchAndVerifyMessages() throws Exception {
-		duckDuckGoPage.open();
+		simpleSearchPage.open();
 		screenshooter.takeScreenshot();
 		
-		duckDuckGoPage.setAnyTextOnSearchField();
+		simpleSearchPage.setAnyTextOnSearchField();
 		screenshooter.takeScreenshot();
 		
 		assertTrue(!screenshooter.isOk());
@@ -119,7 +119,7 @@ public class ScreenshooterTest {
 	
 	@Test
 	public void shouldTakeOneScreenshotAndInputFileShouldExists() throws Exception {
-		duckDuckGoPage.open();
+		simpleSearchPage.open();
 		screenshooter.takeScreenshot();
 		assertTrue(screenshooter.isOk());
 		
@@ -135,10 +135,10 @@ public class ScreenshooterTest {
 	
 	@Test
 	public void shouldTakeTwoScreenshotAndInputFileShouldExists() throws Exception {
-		duckDuckGoPage.open();
+		simpleSearchPage.open();
 		screenshooter.takeScreenshot();
 		
-		duckDuckGoPage.setAnyTextOnSearchField();
+		simpleSearchPage.setAnyTextOnSearchField();
 		screenshooter.takeScreenshot();
 		
 		assertTrue(screenshooter.isOk());
@@ -165,7 +165,7 @@ public class ScreenshooterTest {
 	
 	@Test
 	public void shouldTakeOneScreenshotAndGenerateDiff() throws Exception {
-		duckDuckGoPage.open();
+		simpleSearchPage.open();
 		screenshooter.takeScreenshot();
 		
 		assertTrue(!screenshooter.isOk());
@@ -184,10 +184,10 @@ public class ScreenshooterTest {
 	
 	@Test
 	public void shouldTakeTwoScreenshotsAndGenerateDiff() throws Exception {
-		duckDuckGoPage.open();
+		simpleSearchPage.open();
 		screenshooter.takeScreenshot();
 		
-		duckDuckGoPage.setAnyTextOnSearchField();
+		simpleSearchPage.setAnyTextOnSearchField();
 		screenshooter.takeScreenshot();
 		
 		assertTrue(!screenshooter.isOk());
@@ -244,7 +244,7 @@ public class ScreenshooterTest {
 		assertEquals(HighlightColor.CYAN, capabilities.getHighlightColor());
 		assertEquals(false, capabilities.isShouldGenerateDiffImage());
 		
-		duckDuckGoPage.open();
+		simpleSearchPage.open();
 		screenshooter.takeScreenshot();
 		
 		File outputFile = new File(outputFolder, fileName + "-1.png");
@@ -275,7 +275,7 @@ public class ScreenshooterTest {
 		assertEquals(HighlightColor.CYAN, capabilities.getHighlightColor());
 		assertEquals(true, capabilities.isShouldGenerateDiffImage());
 		
-		duckDuckGoPage.open();
+		simpleSearchPage.open();
 		screenshooter.takeScreenshot();
 		
 		File inputFile = new File(inputFolder, fileName + "-1.png");
@@ -310,7 +310,7 @@ public class ScreenshooterTest {
 	
 	@Test
 	public void shouldGenerateDiffWithMagentaColorWithoutConfig() throws Exception{
-		duckDuckGoPage.open();
+		simpleSearchPage.open();
 		screenshooter.takeScreenshot();
 		assertTrue(!screenshooter.isOk());
 		
@@ -332,7 +332,7 @@ public class ScreenshooterTest {
 		screenshotCapabilites.setInputFolder(inputFolder);
 		screenshotCapabilites.setOutputFolder(outputFolder);
 		screenshooter = new Screenshooter(driver, testNameRule, screenshotCapabilites);
-		duckDuckGoPage.open();
+		simpleSearchPage.open();
 		screenshooter.takeScreenshot();
 		assertTrue(!screenshooter.isOk());
 		
@@ -354,7 +354,7 @@ public class ScreenshooterTest {
 		screenshotCapabilites.setInputFolder(inputFolder);
 		screenshotCapabilites.setOutputFolder(outputFolder);
 		screenshooter = new Screenshooter(driver, testNameRule, screenshotCapabilites);
-		duckDuckGoPage.open();
+		simpleSearchPage.open();
 		screenshooter.takeScreenshot();
 		assertTrue(!screenshooter.isOk());
 		
@@ -376,7 +376,7 @@ public class ScreenshooterTest {
 		screenshotCapabilites.setInputFolder(inputFolder);
 		screenshotCapabilites.setOutputFolder(outputFolder);
 		screenshooter = new Screenshooter(driver, testNameRule, screenshotCapabilites);
-		duckDuckGoPage.open();
+		simpleSearchPage.open();
 		screenshooter.takeScreenshot();
 		assertTrue(!screenshooter.isOk());
 		
@@ -398,7 +398,7 @@ public class ScreenshooterTest {
 		screenshotCapabilites.setInputFolder(inputFolder);
 		screenshotCapabilites.setOutputFolder(outputFolder);
 		screenshooter = new Screenshooter(driver, testNameRule, screenshotCapabilites);
-		duckDuckGoPage.open();
+		simpleSearchPage.open();
 		screenshooter.takeScreenshot();
 		assertTrue(!screenshooter.isOk());
 		
@@ -420,7 +420,7 @@ public class ScreenshooterTest {
 		screenshotCapabilites.setInputFolder(inputFolder);
 		screenshotCapabilites.setOutputFolder(outputFolder);
 		screenshooter = new Screenshooter(driver, testNameRule, screenshotCapabilites);
-		duckDuckGoPage.open();
+		simpleSearchPage.open();
 		screenshooter.takeScreenshot();
 		assertTrue(!screenshooter.isOk());
 		
@@ -442,7 +442,7 @@ public class ScreenshooterTest {
 		screenshotCapabilites.setInputFolder(inputFolder);
 		screenshotCapabilites.setOutputFolder(outputFolder);
 		screenshooter = new Screenshooter(driver, testNameRule, screenshotCapabilites);
-		duckDuckGoPage.open();
+		simpleSearchPage.open();
 		screenshooter.takeScreenshot();
 		assertTrue(!screenshooter.isOk());
 		
