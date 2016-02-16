@@ -56,7 +56,7 @@ public class ScreenshooterTest {
 		screenshotCapabilites.setInputFolder(inputFolder);
 		screenshotCapabilites.setOutputFolder(outputFolder);
 
-		screenshooter = new Screenshooter(driver, testNameRule);
+		screenshooter = new Screenshooter(driver, testNameRule, screenshotCapabilites);
 
 	}
 
