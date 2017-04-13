@@ -108,4 +108,4 @@ mvn test
 - Depending on screen size, test may have different behaviors
 
 ### Working on features
-- Rate of differences: Define whether pixels are different based on their color.
+- Rate of differences: Define whether pixels and/or elements are different based on their color, position (Maybe using percentage or pixels indeed).
